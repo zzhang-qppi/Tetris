@@ -10,8 +10,10 @@ screen.fill((0, 0, 0))
 dflt_clr = (140, 140, 140)  # the default block color - RGB(140, 140, 140)
 
 # initialize the refresh rate
-rate = 800
-pygame.time.set_timer(rate, 5 * 60 * 1000)
+frame = 33.33  # ms per frame
+g = 25  # gravity: frames per drop
+frame_counter = 0
+# pygame.time.set_timer(rate, 5 * 60 * 1000)
 
 
 class Square(object):
@@ -43,10 +45,10 @@ O = (255, 255, 0)
 # functions of tetromino movements
 def create_a_tetro(type):
     if type == "T":
-        board[3, 0].change(T)
+        board[3, 0].change(T)  # load the flat side first
         board[4, 0].change(T)
         board[5, 0].change(T)
-        pygame.time.delay(rate)
+        pygame.time.delay(g*frame)
         pygame.display.update()
         board[3, 0].clear()
         board[5, 0].clear()
@@ -56,10 +58,10 @@ def create_a_tetro(type):
         pygame.display.update()
         return board[4, 0], board[3, 1], board[4, 1], board[5, 1]
     elif type == "L":
-        board[3, 0].change(L)
+        board[3, 0].change(L)  # load the flat side first
         board[4, 0].change(L)
         board[5, 0].change(L)
-        pygame.time.delay(rate)
+        pygame.time.delay(g*frame)
         pygame.display.update()
         board[4, 0].clear()
         board[5, 0].clear()
@@ -88,7 +90,7 @@ def rotate_anti():
     pass
 
 
-def drop():
+def gravity_drop():
     pass
 
 
@@ -146,8 +148,10 @@ while going:
     #     right_dis = (0, 0)
     #     left_dis = (0, 0)
 
-    if pygame.time.get_ticks() - time >= rate:  # this block controls the regular dropping
-        t.move(drop_dis, screen, screen.blit(board, (0, 0)))
+    if pygame.time.get_ticks() - time >= frame:  # this block controls the screen refresh and the gravitational dropping
+        frame_counter += 1
+        if frame_counter == g: gravity_drop()
+        pygame.display.update()
         time = pygame.time.get_ticks()
 
 sys.exit()
