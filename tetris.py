@@ -1,12 +1,18 @@
 import sys
 import pygame
+import random
 
 pygame.init()
 
 # initialize the window
-screen = pygame.display.set_mode((322, 642))
+screen = pygame.display.set_mode((322+350, 642+100))
 pygame.display.set_caption("My Tetris")
-screen.fill((0, 0, 0))
+screen.fill((57, 19, 19))
+screen.fill((0, 0, 0), pygame.Rect((175, 70), (322, 642)))
+
+screen.fill((77, 77, 77), pygame.Rect((25, 90), (130, 130)))  # current hold
+screen.fill((77, 77, 77), pygame.Rect((520, 90), (130, 600)))
+
 dflt_clr = (140, 140, 140)  # the default block color - RGB(140, 140, 140)
 
 # initialize the refresh rate
@@ -32,7 +38,7 @@ class Square(object):
 
 
 # load the squares
-board = [[Square((2 * x + 2 + x * 30, 2 * y + 2 + y * 30)) for x in range(10)] for y in range(20)]
+board = [[Square((2 * x + 2 + x * 30 + 175, 2 * y + 2 + y * 30 + 70)) for x in range(10)] for y in range(20)]
 T = (128, 0, 128)
 L = (255, 165, 0)
 J = (0, 0, 255)
@@ -40,40 +46,56 @@ I = (0, 255, 255)
 Z = (255, 0, 0)
 S = (0, 128, 0)
 O = (255, 255, 0)
+current = random.choice(["T", "L", "J", "I", "Z", "S", "O"])
 
 
 # functions of tetromino movements
 def create_a_tetro(type):
     if type == "T":
-        board[3, 0].change(T)  # load the flat side first
-        board[4, 0].change(T)
-        board[5, 0].change(T)
-        pygame.time.delay(g*frame)
+        board[0][3].change(T)  # load the flat side first
+        board[0][4].change(T)
+        board[0][5].change(T)
         pygame.display.update()
-        board[3, 0].clear()
-        board[5, 0].clear()
-        board[3, 1].change(T)
-        board[4, 1].change(T)
-        board[5, 1].change(T)
+        pygame.time.delay(int(g * frame))
+        board[0][3].clear()
+        board[0][5].clear()
+        board[1][3].change(T)
+        board[1][4].change(T)
+        board[1][5].change(T)
         pygame.display.update()
         return board[4, 0], board[3, 1], board[4, 1], board[5, 1]
     elif type == "L":
-        board[3, 0].change(L)  # load the flat side first
-        board[4, 0].change(L)
-        board[5, 0].change(L)
-        pygame.time.delay(g*frame)
+        board[0][3].change(L)  # load the flat side first
+        board[0][4].change(L)
+        board[0][5].change(L)
         pygame.display.update()
-        board[4, 0].clear()
-        board[5, 0].clear()
-        board[3, 1].change(L)
-        board[4, 1].change(L)
-        board[5, 1].change(L)
+        pygame.time.delay(int(g * frame))
+        board[0][3].clear()
+        board[0][4].clear()
+        board[1][3].change(L)
+        board[1][4].change(L)
+        board[1][5].change(L)
         pygame.display.update()
         return board[3, 0], board[3, 1], board[4, 1], board[5, 1]
     elif type == "J":
-        pass
+        board[0][3].change(L)  # load the flat side first
+        board[0][4].change(L)
+        board[0][5].change(L)
+        pygame.display.update()
+        pygame.time.delay(int(g * frame))
+        board[0][4].clear()
+        board[0][5].clear()
+        board[1][3].change(L)
+        board[1][4].change(L)
+        board[1][5].change(L)
+        pygame.display.update()
+        return board[3, 0], board[3, 1], board[4, 1], board[5, 1]
     elif type == "I":
-        pass
+        board[0][2].change(I)
+        board[0][3].change(I)
+        board[0][4].change(I)
+        board[0][5].change(I)
+        board[0][6].change(I)
     elif type == "Z":
         pass
     elif type == "S":
